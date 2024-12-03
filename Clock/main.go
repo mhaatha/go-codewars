@@ -5,14 +5,7 @@ package main
 import "fmt"
 
 func Past(h, m, s int) int {
-	// Convert hour into milisecond
-	h = h * 3600000
-	// Convert minute into milisecond
-	m = m * 60000
-	// Convert second into milisecond
-	s = s * 1000
-	// Sum all of the hour, minute and second
-	return h + m + s
+	return (h * 3600000) + (m * 60000) + (s * 1000)
 }
 
 func main() {
