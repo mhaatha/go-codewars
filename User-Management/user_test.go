@@ -43,6 +43,25 @@ func TestGetAllUsers(t *testing.T) {
 	}
 }
 
+func TestGetUserById(t *testing.T) {
+	newUUID := uuid.NewString()
+	user := User{
+		ID:    newUUID,
+		Name:  "Test 1",
+		Email: "test1@example.com",
+	}
+	UserSlice = append(UserSlice, user)
+
+	got, err := GetUserById(newUUID)
+	want := newUUID
+
+	assertCheckId(t, got, want)
+
+	if err != nil {
+		t.Errorf("got error %q", err)
+	}
+}
+
 func assertCheckId(t testing.TB, got, want string) {
 	t.Helper()
 

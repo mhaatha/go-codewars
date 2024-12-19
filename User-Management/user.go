@@ -1,5 +1,7 @@
 package usermanagement
 
+import "errors"
+
 type User struct {
 	ID    string
 	Name  string
@@ -16,4 +18,14 @@ func AddUser(u User) (string, error) {
 
 func GetAllUser() ([]User, error) {
 	return UserSlice, nil
+}
+
+func GetUserById(id string) (string, error) {
+	for i := range UserSlice {
+		if UserSlice[i].ID == id {
+			return UserSlice[i].ID, nil
+		}
+	}
+
+	return "", errors.New("ID not found")
 }
