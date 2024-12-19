@@ -6,10 +6,14 @@ type User struct {
 	Email string
 }
 
-var user []User
+var UserSlice []User
 
 func AddUser(u User) (string, error) {
-	user = append(user, u)
+	UserSlice = append(UserSlice, u)
 
 	return u.ID, nil
+}
+
+func GetAllUser() ([]User, error) {
+	return UserSlice, nil
 }
