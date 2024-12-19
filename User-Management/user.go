@@ -29,3 +29,14 @@ func GetUserById(id string) (string, error) {
 
 	return "", errors.New("ID not found")
 }
+
+func DeleteUserById(id string) error {
+	for i := range UserSlice {
+		if UserSlice[i].ID == id {
+			UserSlice = append(UserSlice[:i], UserSlice[i+1:]...)
+			return nil
+		}
+	}
+
+	return errors.New("ID not found")
+}

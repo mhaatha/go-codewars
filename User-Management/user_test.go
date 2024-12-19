@@ -62,6 +62,22 @@ func TestGetUserById(t *testing.T) {
 	}
 }
 
+func TestDeleteUserById(t *testing.T) {
+	newUUID := uuid.NewString()
+	user := User{
+		ID:    newUUID,
+		Name:  "Test 1",
+		Email: "test1@example.com",
+	}
+	UserSlice = append(UserSlice, user)
+
+	err := DeleteUserById(newUUID)
+
+	if err != nil {
+		t.Errorf("got error %q", err)
+	}
+}
+
 func assertCheckId(t testing.TB, got, want string) {
 	t.Helper()
 
