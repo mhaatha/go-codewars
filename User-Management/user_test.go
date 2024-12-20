@@ -2,80 +2,125 @@ package usermanagement
 
 import (
 	"testing"
-
-	"github.com/google/uuid"
 )
 
 func TestAddUser(t *testing.T) {
-	newUUID := uuid.NewString()
-	user := User{
-		ID:    newUUID,
-		Name:  "Test 1",
-		Email: "test1@example.com",
-	}
+	t.Run("non-existing user", func(t *testing.T) {
+		manager := NewUserManager()
+		user := User{ID: "123", Name: "Test", Email: "test@example.com"}
+		got, err := manager.AddUser(user)
+		assertCheckId(t, got, "123")
 
-	want := newUUID
-	got, err := AddUser(user)
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+	})
 
-	assertCheckId(t, got, want)
+	t.Run("existing user", func(t *testing.T) {
+		manager := NewUserManager()
+		manager.AddUser(User{ID: "123", Name: "Test", Email: "test@example.com"})
+		got, err := manager.AddUser(User{ID: "123", Name: "Test", Email: "test@example.com"})
 
-	if err != nil {
-		t.Errorf("got error %q", err)
-	}
+		if got != "" {
+			t.Errorf("got %v want %v", got, "")
+		}
+
+		if err == nil {
+			t.Error("expected error but success")
+		}
+	})
 }
 
 func TestGetAllUsers(t *testing.T) {
-	newUUID := uuid.NewString()
-	user := User{
-		ID:    newUUID,
-		Name:  "Test 1",
-		Email: "test1@example.com",
-	}
-	UserSlice = append(UserSlice, user)
+	t.Run("users exist", func(t *testing.T) {
+		manager := NewUserManager()
+		user1 := User{ID: "123", Name: "Test-1", Email: "test1@example.com"}
+		user2 := User{ID: "321", Name: "Test-2", Email: "test2@example.com"}
+		manager.AddUser(user1)
+		manager.AddUser(user2)
 
-	got, err := GetAllUser()
-	want := UserSlice
+		got, err := manager.GetAllUser()
 
-	assertCheckUsers(t, got, want)
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
 
-	if err != nil {
-		t.Errorf("got error %q", err)
-	}
+		if len(got) != 2 {
+			t.Errorf("expected 2 data but only %v", len(got))
+		}
+
+		if got[0] != user1 {
+			if got[1] != user2 {
+				t.Errorf("got %v want [%v, %v]", got, user1, user2)
+			}
+			t.Errorf("got %v want %v", got[0], user1)
+		}
+	})
+
+	t.Run("users don't exist", func(t *testing.T) {
+		manager := NewUserManager()
+
+		got, _ := manager.GetAllUser()
+
+		if len(got) != 0 {
+			t.Errorf("got %v want %v", got, []User{})
+		}
+	})
 }
 
 func TestGetUserById(t *testing.T) {
-	newUUID := uuid.NewString()
-	user := User{
-		ID:    newUUID,
-		Name:  "Test 1",
-		Email: "test1@example.com",
-	}
-	UserSlice = append(UserSlice, user)
+	t.Run("user exists", func(t *testing.T) {
+		manager := NewUserManager()
+		manager.AddUser(User{ID: "123", Name: "Test", Email: "test@example.com"})
 
-	got, err := GetUserById(newUUID)
-	want := newUUID
+		user, err := manager.GetUserById("123")
 
-	assertCheckId(t, got, want)
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
 
-	if err != nil {
-		t.Errorf("got error %q", err)
-	}
+		if user.ID != "123" {
+			t.Errorf("got %v want %v", user.ID, "123")
+		}
+	})
+
+	t.Run("user doesn't exists", func(t *testing.T) {
+		manager := NewUserManager()
+
+		user, err := manager.GetUserById("123")
+
+		if user != nil {
+			t.Errorf("got %v want %v", user, nil)
+		}
+
+		if err.Error() != "ID not found" {
+			t.Error("expected error ID not found but found")
+		}
+	})
 }
 
 func TestDeleteUserById(t *testing.T) {
-	newUUID := uuid.NewString()
-	user := User{
-		ID:    newUUID,
-		Name:  "Test 1",
-		Email: "test1@example.com",
-	}
-	UserSlice = append(UserSlice, user)
+	t.Run("user exists", func(t *testing.T) {
+		manager := NewUserManager()
+		user := User{ID: "123", Name: "Test-1", Email: "test1@example.com"}
+		manager.AddUser(user)
 
-	err := DeleteUserById(newUUID)
+		err := manager.DeleteUserById("123")
 
-	if err != nil {
-		t.Errorf("got error %q", err)
-	}
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+	})
+
+	t.Run("user doesn't exists", func(t *testing.T) {
+		manager := NewUserManager()
+
+		err := manager.DeleteUserById("123")
+
+		if err == nil {
+			t.Errorf("expected error: %v", "ID not found")
+		}
+	})
 }
 
 func assertCheckId(t testing.TB, got, want string) {
@@ -83,19 +128,5 @@ func assertCheckId(t testing.TB, got, want string) {
 
 	if got != want {
 		t.Errorf("got ID %q want ID %q", got, want)
-	}
-}
-
-func assertCheckUsers(t testing.TB, got, want []User) {
-	t.Helper()
-
-	if len(got) != len(want) {
-		t.Errorf("got %q want %q", got, want)
-	}
-
-	for i := range got {
-		if got[i] != want[i] {
-			t.Errorf("got %q want %q", got, want)
-		}
 	}
 }
