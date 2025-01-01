@@ -14,11 +14,12 @@ func (s *SpySleeper) Sleep() {
 	s.Calls++
 }
 
-type DefaultSleeper struct{}
+// Since we have ConfigurableSleeper, DefaultSleeper is not necessary anymore
+// type DefaultSleeper struct{}
 
-func (d *DefaultSleeper) Sleep() {
-	time.Sleep(1 * time.Second)
-}
+// func (d *DefaultSleeper) Sleep() {
+// 	time.Sleep(1 * time.Second)
+// }
 
 // Function to record all of the dependencies above into one list
 type SpyCountdownOperations struct {
