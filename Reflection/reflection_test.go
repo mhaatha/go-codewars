@@ -8,6 +8,10 @@ import (
 func walk(x interface{}, fn func(input string)) {
 	val := reflect.ValueOf(x)
 
+	if val.Kind() == reflect.Pointer {
+		val = val.Elem()
+	}
+
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
 
@@ -62,6 +66,14 @@ func TestWalk(t *testing.T) {
 		{
 			"nested fields",
 			Person{"Chris", Profile{33, "London"}},
+			[]string{"Chris", "London"},
+		},
+		{
+			"pointers to things",
+			&Person{
+				"Chris",
+				Profile{33, "London"},
+			},
 			[]string{"Chris", "London"},
 		},
 	}
