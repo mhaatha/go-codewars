@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"strings"
 )
 
@@ -25,7 +26,10 @@ var allRomanNumerals = []RomanNumeral{
 	{1, "I"},
 }
 
-func ConvertToRoman(arabic uint16) string {
+func ConvertToRoman(arabic uint16) (string, error) {
+	if arabic > 3999 {
+		return "", errors.New("input can't be more than 3999 (MMMCMXCIX in romans)")
+	}
 	var result strings.Builder
 
 	for _, numeral := range allRomanNumerals {
@@ -35,7 +39,7 @@ func ConvertToRoman(arabic uint16) string {
 		}
 	}
 
-	return result.String()
+	return result.String(), nil
 }
 
 func ConvertToArabic(roman string) uint16 {
