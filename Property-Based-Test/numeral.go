@@ -42,7 +42,7 @@ func ConvertToRoman(arabic uint16) (string, error) {
 	return result.String(), nil
 }
 
-func ConvertToArabic(roman string) uint16 {
+func ConvertToArabic(roman string) (uint16, error) {
 	var arabic uint16 = 0
 
 	for _, numeral := range allRomanNumerals {
@@ -52,5 +52,9 @@ func ConvertToArabic(roman string) uint16 {
 		}
 	}
 
-	return arabic
+	if arabic > 3999 {
+		return 0, errors.New("input can't be more than MMMCMXCIX (3999 in arabics)")
+	}
+
+	return arabic, nil
 }

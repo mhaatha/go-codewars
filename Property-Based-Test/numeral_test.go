@@ -62,12 +62,19 @@ func TestRomanNumerals(t *testing.T) {
 func TestConvertingToArabic(t *testing.T) {
 	for _, test := range cases[:4] {
 		t.Run(fmt.Sprintf("%q gets converted to %d", test.Roman, test.Arabic), func(t *testing.T) {
-			got := ConvertToArabic(test.Roman)
+			got, _ := ConvertToArabic(test.Roman)
 			if got != test.Arabic {
 				t.Errorf("got %d, want %d", got, test.Arabic)
 			}
 		})
 	}
+
+	t.Run("should return an error if input more than MMMCMXCIX (3999 in arabics)", func(t *testing.T) {
+		_, err := ConvertToArabic("MMMM")
+		if err == nil {
+			t.Error("expected error but doesn't get one")
+		}
+	})
 }
 
 func TestPropertiesOfConversion(t *testing.T) {
@@ -77,7 +84,7 @@ func TestPropertiesOfConversion(t *testing.T) {
 		}
 		t.Log("testing", arabic)
 		roman, _ := ConvertToRoman(arabic)
-		fromRoman := ConvertToArabic(roman)
+		fromRoman, _ := ConvertToArabic(roman)
 		return fromRoman == arabic
 	}
 
