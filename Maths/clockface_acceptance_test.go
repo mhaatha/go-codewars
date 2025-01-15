@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhaatha/go-codewars/Maths/clockface"
+	clockface "github.com/mhaatha/go-codewars/Maths"
 )
 
 func TestSecondHandAtMidnight(t *testing.T) {
