@@ -35,6 +35,7 @@ func secondHandPoint(t time.Time) Point {
 	return Point{x, y}
 }
 
+// Turn t into radiant, 2pi is same like 360 degree, math.Pi is same like 180 degree
 func secondsInRadians(t time.Time) float64 {
 	return (math.Pi / (30 / (float64(t.Second()))))
 }
