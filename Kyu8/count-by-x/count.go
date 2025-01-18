@@ -1,10 +1,10 @@
 package kata
 
 func CountBy(x, n int) []int {
-	result := []int{}
+	result := make([]int, n)
 
 	for i := 1; i <= n; i++ {
-		result = append(result, x*i)
+		result[i-1] = x * i
 	}
 
 	return result
