@@ -12,22 +12,22 @@ func TestCount(t *testing.T) {
 		Times      int
 		Want       []int
 	}{
-		{"First test", 1, 10, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}},
-		{"Second test", 2, 5, []int{2, 4, 6, 8, 10}},
-		{"Third test", 100, 5, []int{100, 200, 300, 400, 500}},
+		{"first test", 1, 10, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}},
+		{"second test", 2, 5, []int{2, 4, 6, 8, 10}},
+		{"third test", 100, 5, []int{100, 200, 300, 400, 500}},
 	}
 
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
 			got := CountBy(c.BaseNumber, c.Times)
-			assertEqual(t, got, c.Want)
+			assertEqual(t, c.Name, got, c.Want)
 		})
 	}
 }
 
-func assertEqual(t testing.TB, got, want []int) {
+func assertEqual(t testing.TB, name string, got, want []int) {
 	t.Helper()
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %v, want %v", got, want)
+		t.Errorf("case %q failed: got %v, want %v", name, got, want)
 	}
 }
