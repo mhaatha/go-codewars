@@ -20,10 +20,14 @@ func TestCount(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
 			got := CountBy(c.NumberToMultiply, c.Multiplier)
-
-			if !reflect.DeepEqual(got, c.Want) {
-				t.Errorf("got %v, want %v", got, c.Want)
-			}
+			assertEqual(t, got, c.Want)
 		})
+	}
+}
+
+func assertEqual(t testing.TB, got, want []int) {
+	t.Helper()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v, want %v", got, want)
 	}
 }
