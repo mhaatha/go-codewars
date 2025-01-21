@@ -1,6 +1,7 @@
 package clockface
 
 import (
+	"io"
 	"math"
 	"time"
 )
@@ -10,6 +11,14 @@ const (
 	clockCentreX     = 150
 	clockCentreY     = 150
 )
+
+// SVGWriter writes an SVG representation of an analogue clock, showing the time t, to the writer w
+func SVGWriter(w io.Writer, t time.Time) {
+	io.WriteString(w, svgStart)
+	io.WriteString(w, bezel)
+	secondHand(w, t)
+	io.WriteString(w, svgEnd)
+}
 
 // A Point represents a two-dimensional Cartesian coordinate
 type Point struct {
