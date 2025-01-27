@@ -3,6 +3,8 @@ package array
 import (
 	"reflect"
 	"testing"
+
+	mainFunction "github.com/mhaatha/go-codewars/Array/cmd"
 )
 
 func TestSum(t *testing.T) {
@@ -69,20 +71,22 @@ func TestReduce(t *testing.T) {
 }
 
 func TestBadBank(t *testing.T) {
-	transactions := []Transaction{
-		{
-			From: "Chris",
-			To:   "Riya",
-			Sum:  100,
-		},
-		{
-			From: "Adil",
-			To:   "Chris",
-			Sum:  25,
-		},
+	var (
+		riya  = mainFunction.Account{Name: "Riya", Balance: 100}
+		chris = mainFunction.Account{Name: "Chris", Balance: 75}
+		adil  = mainFunction.Account{Name: "Adil", Balance: 200}
+
+		transactions = []mainFunction.Transaction{
+			mainFunction.NewTransaction(chris, riya, 100),
+			mainFunction.NewTransaction(adil, chris, 25),
+		}
+	)
+
+	newBalanceFor := func(account mainFunction.Account) float64 {
+		return mainFunction.NewBalanceFor(account, transactions).Balance
 	}
 
-	AssertEqual(t, BalanceFor(transactions, "Riya"), 100)
-	AssertEqual(t, BalanceFor(transactions, "Chris"), -75)
-	AssertEqual(t, BalanceFor(transactions, "Adil"), -25)
+	AssertEqual(t, newBalanceFor(riya), 200)
+	AssertEqual(t, newBalanceFor(chris), 0)
+	AssertEqual(t, newBalanceFor(adil), 175)
 }
